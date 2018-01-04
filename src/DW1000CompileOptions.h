@@ -29,5 +29,7 @@
  * Set false if you do not need it and have to save some space
  */
 #define DW1000TIME_H_PRINTABLE true
+#define ESP8266
+#define ESP32
 
 #endif // DW1000COMPILEOPTIONS_H

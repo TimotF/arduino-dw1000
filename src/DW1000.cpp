@@ -162,6 +162,9 @@ void DW1000Class::reselect(uint8_t ss) {
 }
 
 void DW1000Class::begin(uint8_t irq, uint8_t rst) {
+#ifdef ESP32
+	#warning You must specify the SPI pin used for the ESP32 !
+#endif
 	// generous initial init/wake-up-idle delay
 	delay(5);
 	// Configure the IRQ pin as INPUT. Required for correct interrupt setting for ESP8266
@@ -174,6 +177,28 @@ void DW1000Class::begin(uint8_t irq, uint8_t rst) {
 	// pin and basic member setup
 	_rst        = rst;
 	_irq        = irq;
+	_deviceMode = IDLE_MODE;
+	// attach interrupt
+	//attachInterrupt(_irq, DW1000Class::handleInterrupt, CHANGE); // todo interrupt for ESP8266
+	// TODO throw error if pin is not a interrupt pin
+	attachInterrupt(digitalPinToInterrupt(_irq), DW1000Class::handleInterrupt, RISING); // todo interrupt for ESP8266
+}
+
+void DW1000Class::begin(uint8_t irq, int8_t sck, int8_t miso, int8_t mosi, uint8_t rst)
+{
+#ifndef ESP32
+#error You cannot specify the SPI pin used
+#endif
+	// generous initial init/wake-up-idle delay
+	delay(5);
+	// Configure the IRQ pin as INPUT. Required for correct interrupt setting for ESP8266
+	pinMode(irq, INPUT);
+	// start SPI
+	SPI.begin(sck, miso, mosi);
+
+	// pin and basic member setup
+	_rst = rst;
+	_irq = irq;
 	_deviceMode = IDLE_MODE;
 	// attach interrupt
 	//attachInterrupt(_irq, DW1000Class::handleInterrupt, CHANGE); // todo interrupt for ESP8266

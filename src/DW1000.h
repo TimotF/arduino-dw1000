@@ -47,7 +47,20 @@ public:
 	@param[in] rst The reset line/pin for hard resets of ICs that connect to the Arduino. Value 0xff means soft reset.
 	*/
 	static void begin(uint8_t irq, uint8_t rst = 0xff);
-	
+
+	/* ##### Init ################################################################ */
+	/** 
+	[ESP32 version] Initiates and starts a sessions with one or more DW1000. If rst is not set or value 0xff, a soft resets (i.e. command
+	triggered) are used and it is assumed that no reset line is wired.
+	 
+	@param[in] irq The interrupt line/pin that connects the Arduino.
+	@param[in] sck The sck pin number
+	@param[in] miso The MISO pin number
+	@param[in] mosi The MOSI pin number
+	@param[in] rst The reset line/pin for hard resets of ICs that connect to the Arduino. Value 0xff means soft reset.
+	*/
+	static void begin(uint8_t irq, int8_t sck = -1, int8_t miso = -1, int8_t mosi = -1, uint8_t rst = 0xff);
+
 	/** 
 	Selects a specific DW1000 chip for communication. In case of a single DW1000 chip in use
 	this call only needs to be done once at start up, but is still mandatory. Other than a call
